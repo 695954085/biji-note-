@@ -1,0 +1,32 @@
+Adore  --- 
+  swt / swing
+
+
+Adore
+   --java
+   --html/css/js
+   --web 引擎（crosswalk/cef）
+
+
+ameba_abc_for_android
+  adore.jar
+
+ameba_abc_for_cef
+   adore.jar
+
+ameba_abc_for_swt
+  
+Adore2.0
+   --java
+   --html/css/js/ts
+   --web 引擎（crosswalk/cef）  
+
+adore.jar
+
+
+扩展点
+Feature
+View
+
+
+
