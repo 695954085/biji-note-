@@ -346,3 +346,88 @@
 
 15.1 Dom浏览  
 文档对象模型（DOM）是表示和操作HTML和XML文档内容的基础API。HTML文档的树状结构包含表示HTML标签或元素和表示文本字符串的节点
+
+## 15.2.4 通过CSS类选取元素 8/19/2016 2:41:09 PM  ##
+HTML 元素的class属性值是一个以空格隔开的列表，可以为空或包含多个标识符。它描述一个方法来定义多组相关的文档元素。
+15.3.1 作为节点树的文档
+Document对象、它的Element对象和文档中表示文本的Text对象都是Node对象。
+Node 定义了一下的重要的属性：  
+parentNode：该及节点的父节点。  
+childNodes:只读的类数组对象，它是该节点的子节点的实时表示。  
+firstChild、lastChild  
+nextSibilng、previousSibiling  
+nodeType  
+nodeValue  
+nodeName
+  
+15.4.3 数据集合属性  
+
+data-XXX
+
+15.6.1 创建节点
+  
+Text节点用类似的方法创建
+
+	var newnode = document.createTextNode("text node content");
+
+15.6.2 插入节点
+
+一旦有了一个新节点，就可以用Node的方法appendChild或insertBefore将它插入到文档中。appendChild是在需要插入的Element节点上调用的，它插入指定的节点使其成为那个节点的最后一个子节点。
+
+例子15-4：表格的行排序
+<pre><code>
+// Sort the rows in first <tbody> of the specified table according to
+// the value of nth cell within each row. Use the comparator function
+// if one is specified. Otherwise, compare the values alphabetically.
+function sortrows(table, n, comparator) {
+    var tbody = table.tBodies[0]; // First <tbody>; may be implicitly created
+    var rows = tbody.getElementsByTagName("tr"); // All rows in the tbody
+    rows = Array.prototype.slice.call(rows,0);   // Snapshot in a true array
+
+    // Now sort the rows based on the text in the nth <td> element
+    rows.sort(function(row1,row2) {
+        var cell1 = row1.getElementsByTagName("td")[n];  // Get nth cell
+        var cell2 = row2.getElementsByTagName("td")[n];  // of both rows
+        var val1 = cell1.textContent || cell1.innerText; // Get text content
+        var val2 = cell2.textContent || cell2.innerText; // of the two cells
+        if (comparator) return comparator(val1, val2);   // Compare them!
+        if (val1 < val2) return -1;
+        else if (val1 > val2) return 1;
+        else return 0;
+    });
+
+    // Now append the rows into the tbody in their sorted order.
+    // This automatically moves them from their current location, so there
+    // is no need to remove them first. If the <tbody> contains any
+    // nodes other than <tr> elements, those nodes will float to the top.
+    for(var i = 0; i < rows.length; i++) tbody.appendChild(rows[i]);
+}
+
+// Find the <th> elements of the table (assuming there is only one row of them)
+// and make them clickable so that clicking on a column header sorts
+// by that column.
+function makeSortable(table) {
+    var headers = table.getElementsByTagName("th");
+    for(var i = 0; i < headers.length; i++) {
+        (function(n) {  // Nested funtion to create a local scope
+            headers[i].onclick = function() { sortrows(table, n); };
+        }(i));          // Assign value of i to the local variable n
+    }
+}
+
+</code></pre>
+
+> 其中 rows = Array.prototype.slice.call(rows,0);  
+> 理解可以参考：[http://www.cnblogs.com/littledu/archive/2012/05/19/2508672.html](http://www.cnblogs.com/littledu/archive/2012/05/19/2508672.html)  
+<pre>
+Array.prototype.slice = function(start,end){
+     var result = new Array();
+     start = start || 0;
+     end = end || this.length; //this指向调用的对象，当用了call后，能够改变this的指向，也就是指向传进来的对象，这是关键
+     for(var i = start; i < end; i++){
+          result.push(this[i]);
+     }
+     return result;
+}
+</pre>
+this指向rows对象。  
