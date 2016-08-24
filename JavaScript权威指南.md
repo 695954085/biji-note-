@@ -431,3 +431,28 @@ Array.prototype.slice = function(start,end){
 }
 </pre>
 this指向rows对象。  
+
+## 6.6 属性getter和setter 8/23/2016 10:46:55 AM  ##
+- 由getter和setter定义的属性称做“存取器属性”，它不同于“数据属性”，数据属性只有一个简单的值。
+- 当程序查询存取器属性的值时，JavaScript调用setter方法（无参数）。这个方法的返回值就是属性存取表达式的值，当程序设置一个存取器属性的值时，JavaScript调用setter方法，将赋值表达式右侧的值当做参数传入setter。
+- 和数值属性不同，存取器属性不具有可写性。如果属性同时具有getter和setter方法，可读写。
+<pre><code>
+var o = {
+	//普通的数据属性
+	data_prop:value,
+	
+	//存取器属性都是成对定义的函数
+	get accessor_prop(){},
+	set accessor_prop(value){}
+}；
+</code></pre>
+
+## 15.6.4 使用DocumentFragment 8/23/2016 11:27:59 AM  ##
+- DocumentFragment是一种特殊的Node,它作为其他节点的一个临时的容器。
+- DocumentFragment的特殊之处在于它使得一组节点被当做一个节点看待。
+
+## 15.7 生成目录表 8/23/2016 2:02:16 PM  ##
+
+## 18 脚本化HTTP ##
+- 当用脚本设置设置Window对象的location属性或调用表单对象的submit方法时，都会初始化HTTP请求。
+- 本章说明在没有导致Web浏览器重新加载任何窗口或窗体的内容情况下，脚本如何实现Web浏览器与服务器之间的通信。
