@@ -45,3 +45,13 @@ git reset --hard:彻底会退到某个版本，本地的源码也会变为上一
 工作区有一个隐藏的目录<code>.git</code>，这个不算工作区，而是git的版本库。
 
 Git的版本库里存了很多东西，其中最重要的就是陈伟stage（或index）的暂存区。还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
+
+![](https://github.com/695954085/biji-note-/blob/master/res/index_learngit.jpg?raw=true)
+
+第一步是用git add 把文件添加进去，实际上就是把文件修改到暂存区；
+
+第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。
+
+因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。
+
+> ps:只要做了修改，需要把git add xxx 到暂存区；
