@@ -124,3 +124,18 @@ The code above uses the ISafeRunnable interface. This interface protects the plu
 Elicpse是一个commands是一个组件的说明和声明的实施细则，从独立。一个command可以被归类，分配给用户界面和一键绑定可以为命令定义。
 
 
+----------
+
+OSGI(open service gateway initativate)技术是面向Java的动态模型系统。OSGI服务平台向Java提供服务，这些服务使Java成为软件集成和软件开发的首选环境。Java提供在多个平台支持产品的可移植性。OSGI技术提供允许应用程序使用精炼、可重用和可协作的组件构建的标准化语言。
+
+
+----------
+
+众所周知，Eclipse平台本身就是作为一个成功的OSGI应用，从技术层面讲，Eclipse本身就是有OSGI协议驱动的，同时Eclipse对OSGI组件机制做了有力的扩充，也就是我们所熟知的扩展点机制，关于扩展点的支持也作为。
+
+OSGI为我们提供了一个追求模块化的方式来开发、部署、运行、管理组件的机制，其主要的技术特征包括模块化、生命周期管理、松耦合交互等。
+
+Eclipse本身作为一个基础平台存在，其关键需求就是来方便用户扩展，并能够方便的和Eclipse平台本身做无缝集成。说白了，就是Eclipse中一个组件的任务大致为二：提供扩展实现或者声明扩展需求。我们知道，一个软件产品的技术实现必须要以符合产品需求为基础，Eclipse作为一个软件产品最大的需求就是如何方便的允许用户扩展并无缝地集成这些扩展。
+如果要满足Eclipse的这种需求，需要一个组件还需要具备什么关键特指呢？开放、易扩展！！！
+显然，OSGI本身并不能满足Eclipse的部分关键需求。Eclipse在osgi之上向用户提供了扩展点的机制，以一种xml描述的方式来配置组件之间的扩展关系，设计到的三个核心概念便是我们熟知的：扩展点（Extension Point）、扩展（Extension）和 扩展注册表（Extension Registry）。
+
