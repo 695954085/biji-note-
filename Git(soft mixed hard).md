@@ -4,7 +4,11 @@
 
 git reset --mixed:此为默认方式，不带任何参数的git reset，即这种方式，它回退到某个版本，只保留源码，回退commit和index信息。
 
+> 提交到暂存区的内容也会被清除了。
+
 git reset --soft:回退到某个版本，只回退commit的信息，不会恢复index file 一级。如果还要提交直接commit即可。
+
+> add进去暂存区的内容不会改变，本地代码不会被还原
 
 git reset --hard:彻底会退到某个版本，本地的源码也会变为上一个版本的内容。
 
@@ -44,7 +48,7 @@ git reset --hard:彻底会退到某个版本，本地的源码也会变为上一
 
 工作区有一个隐藏的目录<code>.git</code>，这个不算工作区，而是git的版本库。
 
-Git的版本库里存了很多东西，其中最重要的就是陈伟stage（或index）的暂存区。还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
+Git的版本库里存了很多东西，其中最重要的就是称为stage（或index）的暂存区。还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
 
 ![](https://github.com/695954085/biji-note-/blob/master/res/index_learngit.jpg?raw=true)
 
@@ -56,9 +60,7 @@ Git的版本库里存了很多东西，其中最重要的就是陈伟stage（或
 
 > ps:只要做了修改，需要把git add xxx 到暂存区；
 
-
 ----------
-
 
 ## git stash
 
