@@ -534,3 +534,17 @@ relative
 一旦设置了元素的position属性为除了static以外的值，就可以通过元素的left、top、right和bottom属性的一些组合指定元素的位置。
 
 请牢记，没必要给每一个动态元素指定尺寸，某些元素具有固有尺寸。而且，对包含文本或其他流式内容的动态元素指定想要的宽度就足够了，让元素内容布局来自动决定他的高度。
+
+### 16.3 脚本化内联样式 9/5/2016 4:14:15 PM 
+
+style属性不同寻常：它的值不是字符串，而是一个CSSStyleDeclaration对象。CSSStyleDeclaration属性名的格式应该是移除连字符，将每个连字符后面紧连接着的字母大写。
+
+
+### 16.6.1 开启和关闭样式表
+
+最简单的脚本化样式表的技术是最便捷和健壮的。&lt;style&gt;、&lt;link&gt;元素和CSSStyleSheet对象都定义了一个在JavaScript中可以设置和查询的disabled属性。顾名思义，如果disabled属性为true，样式表就被浏览器关闭并忽略。
+
+### 16.6.2 查询、插入与删除样式表规则
+
+CSSStyleSheet对象有一个cssRules[]数组
+
