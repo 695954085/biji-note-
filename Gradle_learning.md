@@ -115,3 +115,91 @@ dependencies {
 - 我们了解了Gradle会在测试执行后创建一个HTML测试报告。
 - 我们学会创建一个jar文件。
 
+----
+### 创建一个多项目构建
+
+我们将创建一个多项目的Gradle构建，包括两个子项目：app和core。初始阶段，先要建立Gradle构建的目录结构。
+
+### 建立目录结构
+
+由于core和app模块都使用Java语言，而且它们都使用Java项目的默认项目布局，我们根据以下
+
+### 对包含在多项目构建中的项目进行配置
+
+- 在根目录的根目录下创建setting.gradle文件，一个多项目Gradle构建必须含有这个文件，因为它指明了那些包含在多项目构建中的项目。
+- 确保app和core项目包含在我们的多项目构建中。
+
+我们的settings.gradle文件如下：
+
+	include 'app'
+	include 'core'
+
+### 配置core项目
+
+我们可以通过以下步骤对core项目进行配置：
+
+- 在core项目的根目录下创建build.gradle文件。
+- 使用Java插件创建一个Java项目。
+- 确保core项目从Maven2中央仓库（central Maven2 repository）中获取依赖。
+- 声明JUnit依赖，并使用testCompile配置项，该配置项声明：core项目在它的单元测试被编译前，需要JUnit库。
+
+### 配置App项目
+
+如果多项目构建拥有项目A和项目B，同时，项目B的编译需要项目A，我们可以通过在项目B的build.gradle文件中添加一下依赖声明来惊醒依赖配置。
+
+<pre>
+dependencies {
+    compile project(&#039;:A&#039;)
+}
+</pre>
+
+app项目配置：
+
+1. 配置所需的依赖，app项目在编译时需要两个依赖：
+	- Log4j
+	- core模块
+
+
+### 移除重复配置
+
+当我们对多项目构建中的子项目进行配置时，我们在core和app项目的构建脚本中添加了重复的配置。
+	- 由于两个项目都是Java项目，因此它们都使用Java插件。
+	- 两个项目都使用Maven2中央仓库。
+
+如果想要将重复的配置转移到根目录的构建脚本中，就必须将一下配置添加到build.gradle文件中。
+
+<pre>
+project(&#039;:app&#039;) {
+	apply plugin: &#039;java&#039;
+ 
+	repositories {
+		mavenCentral()
+	}
+}
+ 
+project(&#039;:core&#039;) {
+	apply plugin: &#039;java&#039;
+ 
+	repositories {
+		mavenCentral()
+	}
+}
+</pre>
+
+如果我们想要在根目录的子目录中添加通用的配置，需要将以下片段添加到根目录的build.gradle文件中。
+
+<pre>
+subprojects {
+    apply plugin: 'java'
+ 
+    repositories {
+        mavenCentral()
+    }
+}
+</pre>
+
+####总结
+
+1. 一个多项目构建必须在根目录下包含settings.gradle文件，因为它指明了那些包含在多项目构建中的项目。
+2. 如果需要在多项目构建的所有项目中加入公用的配置或行为，我们可以将这项配置加入到根项目的build.gradle文件中。
+3. 如果需要在根项目的子项目中加入公用的配置或行为，我们可以将这项配置加入到根项目的build.gradle文件中(使用subprojects)。

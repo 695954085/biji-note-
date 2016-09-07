@@ -125,3 +125,43 @@ f1要进行如下改写（这里使用的是jQuery的实现）：
 
 事件传播的另外一种形式称为事件捕获，在容器元素上注册的特定处理程序
 有机会再事件传播到真实目标之前拦截（或捕获）它。
+
+### 17.2.3 addEventListener() 9/7/2016 9:43:55 AM 
+
+所有浏览器都支持的标准事件模型中，任何能成为事件目标的对象，定义了一个名叫addEventListener方法，使用这个方法可以为事件目标注册事件处理程序。
+
+用“click”作为第一个参数调用addEventListener不会影响onclick属性的值，能通过多次调用addEventListener为同一个对象注册同一个时间类型的多个处理程序函数。当对象上发生事件时，所有该事件类型的注册处理程序都会按照注册的顺序调用。
+
+### 17.3 事件处理程序的调用
+
+一旦注册了事件处理程序，浏览器就会在指定对象上发生指定类型事件时自动调用它。
+
+###17.3 事件处理程序的运行环境
+
+当通过设置属性注册事件处理程序时，事件处理程序在事件目标上定义，所以它们作为这个对象的方法来调用。在事件处理程序内，this关键字指的是事件目标。
+
+	e.onclick = function(){}
+
+> addEventListener同理
+
+但是对于attachEvent，使用attachEvent注册的处理程序作为函数调用，它的this值是全局（Window）对象。
+
+<pre>
+/*
+ * 在指定的事件目标注册用于处理指定类型事件的指定处理程序函数
+ * 确保处理程序一直作为事件目标的方法调用
+ */
+function addEvent(target,type,handler){
+	if(target.addEventListener){
+		target.addEventListener(type,handler,false);
+	}else{
+		target.attachEvent("on" + type,function(event){
+			//把处理程序作为事件目标的方法调用，
+			//传递事件对象
+			return handler.call(target,event);
+		});
+	}
+	
+}
+
+</pre>
