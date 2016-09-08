@@ -165,3 +165,7 @@ function addEvent(target,type,handler){
 }
 
 </pre>
+
+### 上传文件
+
+&lt;input type="file"/&gt;元素选择文件时，表单将在它产生的POST请求主体中发送文件内容。HTML表单始终能上传文件，但到目前为止它还不能使用XMLHttpRequest API做相同的事情。
