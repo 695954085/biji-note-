@@ -1,0 +1,28 @@
+1. /AppFramework_2013B/trade/auth/authClient/Authclient.abf
+转化问题： group的长度太短，导致有些元素不显示，显示了滚动条。
+
+2. E:\\Agree\\src\\git\\ab\\AppFramework\\AppFramework_2013B\\trade\\auth\\authClient\\ClockAuth.abf
+转化问题： 有些时候，行与行之间的间隔很大，但是abf4a显示时候，确实一行一行排列。
+
+3. E:\\Agree\\src\\git\\ab\\AppFramework\\AppFramework_2013B\\trade\\business\\BnkCardAc\\AgntInfColl\\AgntInfColl.abf
+转化问题： group的长度显示有问题，导致有些元素不显示，却显示了滚动条。
+
+4. /AppFramework_2013B/trade/business/PrivateMenuManage/PrivateMenuManage.abf
+转化问题： 如果abf左右布局时候，两边其中一边缺少了composite控件，abf4a转化出现问题，左右边控件其中一边控件占满格的情况下
+ ，另外一边的控件，布局会分行。。。
+ 
+ 
+总结问题：
+1. offset的问题，造成原因是因为原来xy布局的时候，长度就有问题。 解决办法：不知道
+2. rowsSum可以改进。rowsSum以及height造成了滚动条的存在。 
+3. 可以根据，rowsBean的key数量进行获取行数。
+4. table中的每个tableItem的宽度太小。
+5. 如果feature是table的话。entry的generate需要变化
+	<Entry key="constraints#tableItemWidth" type="Integer" value="50"></Entry>
+	<Entry key="layout#layout" value="rowgrid" type="String"/>
+    <Entry key="layout#rowsum" value="4" type="Integer"/>
+	最后两行多了会出错。
+6. 路径	/AppFramework_2013B/trade/business/synthSign/onlineBankingTransfer/onlineBankingTransfer_1.abf
+问题：每行元素加起来，可能超过12格。
+7. 有些Entry里面还有Mapping元素
+8. 除了xy布局外，还存在fill等布局，那么这些是否需要转换。
