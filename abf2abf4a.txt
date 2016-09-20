@@ -13,7 +13,7 @@
  
  
 总结问题：
-1. offset的问题，造成原因是因为原来xy布局的时候，长度就有问题。 解决办法：不知道
+1. offset的问题，造成原因是因为原来xy布局的时候，长度就有问题。
 2. rowsSum可以改进。rowsSum以及height造成了滚动条的存在。 
 3. 可以根据，rowsBean的key数量进行获取行数。
 4. table中的每个tableItem的宽度太小。
@@ -26,3 +26,15 @@
 问题：每行元素加起来，可能超过12格。
 7. 有些Entry里面还有Mapping元素
 8. 除了xy布局外，还存在fill等布局，那么这些是否需要转换。
+9. 路径	/AppFramework_2013B/trade/frame/main/toolbar/announcement/Announcement.abf
+问题：出现了composite的布局为fill，导致子控件没有设置长度，大小等参数，所以导致转化后，子控件没有row等参数。
+10. group 每一行的格子默认为40，小于40的也按40布局，大于40的按实际高度排列。 而且加多20高度。
+11. generateBean
+
+
+12. fill布局中间包裹了composite，那么这个composite是没有site
+
+13. fill布局需要转化。
+已经知道：fill布局里面通常只有一个控件。那个控件通常没有设置长度等信息。
+
+14. fill布局，可能复制。
