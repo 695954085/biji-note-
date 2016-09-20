@@ -38,3 +38,15 @@
 已经知道：fill布局里面通常只有一个控件。那个控件通常没有设置长度等信息。
 
 14. fill布局，可能复制。
+
+15. E:\Agree\src\ab\AppFramework\AppFramework_2013B\trade\business\customInfo\IDCardCheck.abf4a 
+问题： group的计算长度少了1？
+
+16. 
+问题1： 如果Content的Entry为fill的时候，所有子类的全部复制。
+问题2： 如果Content是xy布局的时候，有子类是fill布局，这个子类的所有子类都复制。
+XY2RowGridUtil.parseAbfGenerate()
+方法分为量部分，1，contentBean如果是filllayout。不走原来的sort，以及generateAbf4a方法。
+改为：sortForFill.generateAbf4aForFill方法
+
+如果contentBean为xy布局，但是中间存在其他布局的话。。。。
