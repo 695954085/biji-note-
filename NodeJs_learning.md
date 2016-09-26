@@ -70,3 +70,76 @@ Node.js 异步编程的直接体现就是回调。
 异步编程依托于回调来体现，但不能说使用了回调后程序就异步化了。
 回调函数在完成任务后就会被调用，Node使用了大量的回调函数,Node所有API都支持回调函数。
 
+### Node.js 事件循环 9/26/2016 11:12:51 AM
+ 
+Node.js是单进程单线程应用程序。
+
+Node.js的每一个API都是异步的，并作为一个独立线程运行，使用异步函数调用，并处理并发。
+
+Node.js 观察者模式 
+
+### 事件驱动程序
+
+Node.js使用事件驱动模型，当web server接受到请求，就把它关闭然后进行处理，然后去服务下一个web请求。
+
+### Node.js EventEmitter
+
+Node.js 所有的异步I/O 操作在完成时都会发送一个事件到事件队列。
+
+### EventEmitter类
+
+events模块只提供了一个对象：events.EventEmitter。EventEmitter的核心就是事件触发与事件监听器的封装。
+
+EventEmitter的每个事件由一个事件名和若干个参数组成，事件名是一个字符串，通常表达一定的语义。对于每个事件，EventEmitter支持若干个事件监听器。
+
+当事件触发时，注册到这个事件的事件监听器被依次调用，事件参数作为回调函数参数传递。
+
+<pre>
+//event.js 文件
+var events = require('events'); 
+var emitter = new events.EventEmitter(); 
+emitter.on('someEvent', function(arg1, arg2) { 
+	console.log('listener1', arg1, arg2); 
+}); 
+emitter.on('someEvent', function(arg1, arg2) { 
+	console.log('listener2', arg1, arg2); 
+}); 
+emitter.emit('someEvent', 'arg1 参数', 'arg2 参数'); 
+</pre>
+
+以上例子中，emitter为事件someEvent注册了两个事件监听器，然后触发了someEvent事件。运行结果可以看出两个事件监听器回调函数被先后调用。这就是EventEmitter最简单的用法。
+
+EventEmitter提供了多个属性，如on和emit。on函数用于绑定事件函数，emit属性用于触发一个事件。
+
+### buffer类
+
+JavaScript语言只有字符串数据类型，没有二进制数据类型。
+
+但在处理像TCP流或文件流时，必须使用到二进制数据。因此在Node.js中，定义一个Buffer类，该类用来创建一个专门存放二进制数据的缓存区。
+
+Buffer库为Node.js带来了一种存储原始数据的方法，可以让Node.js处理二进制数据，每当需要在Node.js中处理I/O操作中移动的数据时，就有可能使用Buffer库。一个Buffer类似于一个整数数组。
+
+### 创建Buffer对象
+
+- 创建长度为10字节的Buffer实例：
+
+		var buffer = new Buffer(10);
+
+- 通过给定的数组创建Buffer实例：
+
+		var buf = new Buffer([10,20,30,40,50]);
+
+- 通过一个字符串来创建Buffer实例：
+
+		var buf = new Buffer("www.runoob.com","utf-8");
+
+### 写入缓冲区
+
+写入缓冲区的语法：
+	
+	buf.write(string[, offset[, length]][, encoding]);
+
+### 冲缓冲区读取数据
+
+	buf.toString([encoding[, start[, end]]])
+
