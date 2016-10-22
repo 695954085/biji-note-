@@ -143,3 +143,33 @@ Buffer库为Node.js带来了一种存储原始数据的方法，可以让Node.js
 
 	buf.toString([encoding[, start[, end]]])
 
+## Node.js模块系统
+
+为了让Node.js的文件可以相互调用，Node.js提供了一个简单的模块系统。
+
+模块是Node.js应用程序的基本组成部分，文件和模块时一一对应的。换言之，一个Node.js就是一个模块，这个文件可能是JavaScript代码、JSON或者编译过的C++扩展。
+
+### 创建模块
+
+在Node.js中，创建一个模块非常简单，如下我们创建一个‘main.js’文件
+
+<pre>
+var hello = require('./hello');
+hello.world();
+</pre>
+
+以上实例中，代码require('./hello')引入了当前目录下的hello.js文件。
+
+Node.js提供了exports和require两个对象，其中exports是模块公开的接口，require用于从外部获取一个模块的接口，即所获取模块的exports对象。
+
+<pre>
+exports.world = function() {
+  console.log('Hello World');
+}
+</pre>
+
+在以上实例中，hello.js通过exports对象把world作为模块的访问接口，在main.js中通过require('./hello')加载这个模块，然后就可以直接访问hello.js中exports对象的成员函数。
+
+### 服务器的模块放在哪里
+
+也许你已经注意到
