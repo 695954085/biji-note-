@@ -1,0 +1,32 @@
+﻿adore简介
+  adore,即Agree Decent Ornate Rendering Engine的简称，赞同华丽展现引擎
+
+基础架构
+  java
+  html/css/js(ts)
+  cef(Chromium Embedded Framework)/crosswalk(android)/WKWebView(IOS)
+     
+事件处理
+  js -->java
+  
+布局
+  fill/sash/rowgrid/headerfooter     
+
+依赖库  
+  materializecss(http://materializecss.com/)
+     --google mertial design 开源css实现
+  jquery.js
+  require.js
+     --amd（异步模块加载）
+  echarts.js
+  其他	 
+ 
+开发工具
+ intelliJ
+ vscode
+
+编译ts
+ 1.安装node.js
+ 2.安装typescript
+     npm install -g typescript
+ 3.cd到adore\src\main\resources\www\ts目录下输入tsc即可

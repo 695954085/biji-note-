@@ -67,3 +67,17 @@ Git的版本库里存了很多东西，其中最重要的就是称为stage（或
 ### git stash save
 
 保留工作区的所有修改，工作区的所有修改恢复到前一个commit。
+
+
+### git status
+
+- 查看当前空间
+
+### git mv filefrom fileto
+
+相当于
+<pre>
+mv filefrom fileto //把filefrom复制，重命名为fileto
+git rm filefrom //删除 filefrom
+git add fileto // fileto add进暂存区
+</pre>

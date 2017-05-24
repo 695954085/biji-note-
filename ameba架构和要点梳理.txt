@@ -1,0 +1,48 @@
+****ameba架构****
+  通信
+     Cell(CellUnit1,CellUnit2,...) -- pub.communication,pub.communication.mina 一个abs就有一个cell，然后在cell中注册cellUnit
+     mina  -- org.apache.mina
+	 
+	 CellUnit 客户端在启动的时候，需要向服务器请求配置。
+	 
+	 
+	 PreferenceClient 实现预启动扩展点
+  web容器
+     servlet(DownloadResourceServlet、UpdateServlet,...) -- server.web,client.web  交易资源下载，以及插件更新
+     jetty -- eclipse自带
+	 
+  资源
+     交易资源/插件更新/主题更新等 -- pub.resource,pub.resource.server,pub.resource.client,等
+	 
+  配置
+     配置管理  -- pub.preferences,server.preference,client.preference,
+  外设
+  流程引擎 -- pub.engine,pub.tad,pub.mpt等
+  监控 -- pub.monitor,pub.monitor.jmx
+  UI -- client.gui、client.gui.adore等插件
+     swt/adore
+  其他模块
+     数据库连接池
+     日志
+	 eci 后台通信挡板？ afa 
+     debug ide debug？
+	 csd 云服务
+	 ...等
+
+****要点梳理****
+invoke/issue  -- TradeServer/TradeClient等
+	invoke 客户端请求服务端 服务器端issue回客户端
+Realm -- databinding
+   BindingRealm -- 绑定操作
+   DataModelRealm  -- 数据模型操作
+   LogicRealm  -- 逻辑位面(LR)，主要用于PITS的执行 线程
+DataModel/UIModel
+LogicRealmTask -- LRT   (LR/LRT)
+ProcessInstanceThreadSegment -- PITS  tad/auf/lfc/mpt
+DefaultExpressionEngine -- 表达式引擎(mvel)
+ILogiclet 
+   pub.lfc/server.lfc 
+CommandHandler
+  
+
+   
