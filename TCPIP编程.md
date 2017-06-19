@@ -98,3 +98,14 @@ TCP协议并不能确定在read和write方法中所发送信息的界限，虽�
 1. Create an I/O service - Choose from already available Services (*Acceptor) or create your own
 2. Create a Filter Chain - Choose from already existing Filters or create a custom Filter for transforming request/response
 3. Create an I/O Handler - Write business logic, on handling different messages
+
+
+
+#### Server Architecture 服务器架构 ####
+
+![服务器架构](https://github.com/695954085/biji-note-/blob/master/res/Server_arch.png?raw=true)
+
+1. IOAcceptor 在网络上监听传入的连接/数据包
+2. 对于新连接Connection，会创建一个新的session，并在后续的来自相同IP地址和端口组合的请求都由此session处理。
+3. 所有session接收的数据都是通过上图的流程遍历过滤链。过滤器用于修改数据包的内容(如转化对象，添加/删除信息等)。
+4. 最后数据包和转化后的对象进入了IOHandler。IOHandler被用于业务需求。
