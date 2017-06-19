@@ -63,3 +63,38 @@ TCP协议并不能确定在read和write方法中所发送信息的界限，虽�
 ### 第三章
 
 - 在程序中使用套接字是因为需要向其他程序提供信息，或使用其他程序提供的信息。
+
+
+
+### InetAddress ###
+
+1. 简介
+	1. Ip地址是Ip使用32位或者128位无符号数字，它是传输层协议TCP，UDP的基础。InetAddress是Java对IP地址的封装，在java.net中有许多类使用了InetAddress，包括ServerSocket，Socket，DatagramSocket等。
+	2. InetAddress的实例对象包含以数字形式保存的IP地址，同时还包含主机名。InetAddress类提供了将主机名解析为IP地址（或反之）的方法。
+	3. InetAddress对域名进行解析是使用本机机器配置或网络命名服务。对于DNS来说，本地需要向DNS服务器发送查询的请求，然后服务器根据一系列的操作，返回对应的IP地址，为了提高效率，通常本地会缓存一些主机名与IP地址的映射，这样访问相同的地址，就不需要重复发送DNS请求了。在java.net.InetAddress类同样采用了这种策略。在默认情况下，会缓存一段有限时间的映射，对于主机名解析不成功的结果，会缓存非常短的时间来提高性能。
+
+2. InetAddress对象的获取
+	1. InetAddress的构造函数不是公开的，所以需要通过它提供的静态方法来获取。
+		* static InetAddress[] getAllByName(String host)
+		* static InetAddress getByAddress(byte[] addr)
+		* static InetAddress getByAddress(String host,byte[] addr)
+		* static InetAddress getByName(String host)
+		* static InetAddress getLocalHost()
+	2. 在这些静态方法中，最为常见的应该是getByName(String host)方法了，只需要传入目标主机的名字，InetAddress会尝试做连接DNS服务器，并且获取IP地址的操作。
+		<pre>InetAddress inetAddress = InetAddress.getByName("www.baidu.com")</pre>
+		* 注意这些方法可能会抛出异常。如果禁止访问网络或者不允许访问DNS，或者找不到主机的IP地址。
+	 
+
+## Mina学习 ##
+
+1. Mina 是 NIO。
+2. Mina 可以模仿阻塞效果。
+3. Mina 作用于TCP和UDP就是传输层
+4. Mina掩盖了TCP和UDP之间的差异，使您专注于对应用程序代码和应用协议编码解码。
+
+
+#### 创建Mina应用程序 ####
+
+1. Create an I/O service - Choose from already available Services (*Acceptor) or create your own
+2. Create a Filter Chain - Choose from already existing Filters or create a custom Filter for transforming request/response
+3. Create an I/O Handler - Write business logic, on handling different messages
