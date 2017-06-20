@@ -109,3 +109,40 @@ TCP协议并不能确定在read和write方法中所发送信息的界限，虽�
 2. 对于新连接Connection，会创建一个新的session，并在后续的来自相同IP地址和端口组合的请求都由此session处理。
 3. 所有session接收的数据都是通过上图的流程遍历过滤链。过滤器用于修改数据包的内容(如转化对象，添加/删除信息等)。
 4. 最后数据包和转化后的对象进入了IOHandler。IOHandler被用于业务需求。
+
+
+#### Client Architecture 客户端架构 ####
+
+![客户端架构](https://github.com/695954085/biji-note-/blob/master/res/clientdiagram.png?raw=true)
+
+1. 客户端首先创建一个IOConnector(Mina Server已经连接Socket)，启动与服务器连接。
+2. 连接之后，将创建一个Session并与connection相关联。
+3. 客户端写入回话数据时，导致数据在过滤链中遍历后发送到服务器。
+4. 从服务器中的到的数据将在过滤链中遍历，最后到达IOHandler处处理。
+
+
+#### telnet命令 ####
+
+telnet就是查看某个端口是否可访问。
+
+#### IOService ####
+
+1. 它将处理与您的应用应用程序的所有交互，并与远程对等体发送和接收消息，管理回话，连接等。
+2. 它是一个交口，它是为实现IoAcceptor，IoConnector。
+3. IoService的用处：
+	1. sessions manager：创建和删除回话，检测空闲。
+	2. 过滤器链管理：处理过滤器链，允许用户即是更改链
+	3. 处理程序调用：在收到某些消息时，调用处理函数
+	4. 统计管理：更新发送的消息数
+	5. 监听器管理
+	6. 通信管理
+
+4. IoService是Mina中两个最重要的类实现的接口。
+	1. IoAcceptor
+	2. IoConnector
+
+#### IoAcceptor ####
+1. 这个接口是由于accept()方法而命名的，负责在客户机和服务器之间创建新的连接。服务器接受传入的连接请求。
+2. 由于要处理多种传输(TCP/UDP/...)，因此我们对该接口有多个实现。
+	1. NioSocketAcceptor：非阻塞Socket传输IoAcceptor
+	2. NioDatagramAcceptor：非阻塞UDP传输IoAcceptor
