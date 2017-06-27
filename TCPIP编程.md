@@ -146,3 +146,92 @@ telnet就是查看某个端口是否可访问。
 2. 由于要处理多种传输(TCP/UDP/...)，因此我们对该接口有多个实现。
 	1. NioSocketAcceptor：非阻塞Socket传输IoAcceptor
 	2. NioDatagramAcceptor：非阻塞UDP传输IoAcceptor
+	3. AprSocketAcceptor： APR？
+	4. VmPipeSocketAcceptor： VM？
+
+![](https://github.com/695954085/biji-note-/blob/master/res/IoServiceAcceptor.png?raw=true)
+#### IoConnector ####
+
+1. IoConnector实现类
+	1. NioSocketConnector：非阻塞Socket传输IoConnector
+	2. NioDatagramConnector：非阻塞UDP传输IoConnector
+	3. AprSocketConnector：APR？
+	4. ProxyConnector：提供代理支持的IoConnector
+	5. SerialConnector：一个IoConnector用于串行传输
+	6. VmPipeConnector：VM中的IoConnector
+
+![](https://github.com/695954085/biji-note-/blob/master/res/IoServiceConnector.png?raw=true)
+
+#### session会话 ####
+
+会话用于存储有关连接的持久信息，以及客户端或服务器在请求处理期间可能需要使用的任何信息。
+
+session有一个状态标志。
+1. connected 会话已经创建并且可用。
+2. idle：会话至少没有处理任何请求
+	1. idle for read：实际上有一段时间没有读取
+	2. idle for write：一段时间没有写入
+	3. idle：不读写一段时间
+3. closing：会话正在关闭
+4. closed：会话现已关闭
+
+
+#### Filter ####
+
+IoFilter可以过滤IoService和IoHandler之间的所有I/O事件和请求。
+
+过滤器提供了多种开箱即用的过滤器：
+1. LoggingFilter记录所有事件和请求
+2. ProtocolCodecFilter将传入的ByteBuffer转换为消息pojo
+3. SSLFilter添加SSL-TLS支持。
+
+转换写请求
+
+如果您通过IoSession.write() 转换传入的写入请求，那么事情会变得非常棘手。
+
+#### IoHandler ####
+
+- sessionCreated Event
+
+	创建新连接时触发会话创建的事件。对于TCP连接成功触发，对于UDP，接收到数据包才触发。
+
+- sessionIdle Event
+	
+	会话空闲时触发会话空闲事件，UDP功能不被调用。
+
+- ExceptionCaught Event
+
+	当用户代码或MINA抛出异常时，调用此函数。如果异常是IOException，连接被关闭。
+
+- messageSent Event
+
+	当执行了IoSession.write() 此方法被触发。
+	
+#### IoBuffer ####
+
+#### Codec Filter 编解码器 ####
+
+**为什么要使用ProtocolCodecFilter？**
+
+ - TCP保证会以正确的顺序发送所有的数据包。但是，不能保证发送方的一个写操作会引起接收方的一个读操作。如果发送者没有调用ProtocolCodecFilter的Iosession.write(Object message)，会导致接收者产生过个messageReceived事件。
+ - 大多数网络应用程序需要一种方法来查找当前消息的结束位置以及下一个消息的开始位置。
+
+**怎么办？**
+
+应用程序基本上只是接收一堆字节，你需要把这些字节转化为消息(高级对象)。
+
+有三种将字节流分解为消息的常用技术：
+	- 使用固定长度的消息
+	- 使用固定长度的头部用于指定body的长度
+	- 使用分隔符
+
+Mina保证了不会有多个线程同时执行同一个session的decode，但是不能确保数据1和数据2在同一个线程下执行。为了避免可见性问题，您必须正确地访问此解码器状态(IoSession的属性是存储在ConCurrentHashMap中)，以便其他线程自动可见。
+
+**HashTable ConCurrentHashMap 区别**
+
+1. 大家都知道，HashMap中未进行同步考虑，而HashTable则使用了synchronized，带来的影响就是可选择，我们可以在单线程时使用HashMap提高效率，而多线程时使用HashMapTable来保证安全。
+2. HashTable是通过synchronized整张Hash表，即每次锁住整张表让线程独占，安全背后是巨大的浪费。
+
+
+
+
