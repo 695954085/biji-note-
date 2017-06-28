@@ -229,9 +229,18 @@ Mina保证了不会有多个线程同时执行同一个session的decode，但是
 
 **HashTable ConCurrentHashMap 区别**
 
+![](https://github.com/695954085/biji-note-/blob/master/res/HashTable%E5%92%8CConcurrentHashMap.jpg?raw=true)
+
 1. 大家都知道，HashMap中未进行同步考虑，而HashTable则使用了synchronized，带来的影响就是可选择，我们可以在单线程时使用HashMap提高效率，而多线程时使用HashMapTable来保证安全。
 2. HashTable是通过synchronized整张Hash表，即每次锁住整张表让线程独占，安全背后是巨大的浪费。
+3. ConcurrentHashMap则是锁桶。
 
+#### SSL Filter ####
+
+SSL Filter负责管理通过安全连接发送加密和解密数据的过滤器。每当你需要建立安全连接或转换现有连接以使其安全时，您必须在过滤器链上添加SSL Filter。
+
+
+SSLFilter一定要注入到过滤链的第一个位置。
 
 
 
