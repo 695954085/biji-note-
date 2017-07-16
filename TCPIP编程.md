@@ -243,4 +243,10 @@ SSL Filter负责管理通过安全连接发送加密和解密数据的过滤器�
 SSLFilter一定要注入到过滤链的第一个位置。
 
 
+![](https://github.com/695954085/biji-note-/blob/master/res/TLS-protocol.png?raw=true)
 
+如图所示，它是一个2阶段的协议，首先进行握手，然后进行客户端和服务器端将能够交换加密数据。
+
+**握手**
+
+实际上，要实现握手，服务器必须等待一些握手消息的到达，例如客户端发送一个ClientHello消息。
