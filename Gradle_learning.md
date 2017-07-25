@@ -223,3 +223,51 @@ subprojects {
 
 本指南介绍如何修改构建脚本以启动构建扫描。或者，您可以修改init脚本，以便为所有应用程序启用构建扫描。
 
+
+#### 创建新的Gradle Builds ####
+
+运行tasks命令
+
+Gradle是项目的通用构建工具，Gradle本身是建立在一个面向对对象的API上，它由许多类和方法组成，还有一个用于配置它们的简单语法。构建文件本身配置一个org.gradle.api.Project类的实例，它具有许多内置的属性和方法。从此Project,您可以访问Gradle的所有功能。
+
+您可以定义自己的任务，配置Gradle库提供的任务，或使用插件添加的任务。
+
+生成一个Gradle Wrapper
+
+#### 配置Gradle核心任务 ####
+
+Gradle附带有可以在自己的项目中配置任务库。例如，有一种称为核心类型的Copy，它将文件从一个位置复制到另外一个位置。该Copy任务是非常强大。
+
+#### 配置核心任务并使用插件 ####
+
+
+Gradle包括一系列插件，而Gradle插件门户中有很多可用插件。
+
+例子，核心类型Zip，可以使用配置的名称和位置创建项目的zip存档。
+
+使用语法base插件添加到您的build.gradle文件，使用plugins语法。确保plugins放在文件的顶部。
+
+#### 创建多项目构建 Creating Multi-project Builds####
+
+
+多项目构建有助于模块化。它允许一个人在一个更大项目中关注与自己的工作，Gradle负责依赖项目中的其他部分。
+
+`gradle init`
+
+使用init将创建可以自定义的build.gradle和settting.gradle文件。
+
+在多项目中，您可以使用顶级构建文件来尽可能多的通用性，从而使子项目仅定制自己所需的内容。
+
+allprojects快讲应用所有子项目以及根项目。subprojects块仅为所有子项目添加配置项。
+
+Gradle自动检测到一个build任务`greeting-library`并执行它，这是Gradle多项目的强大功能之一。当子项目中的任务具有与顶级项目中的任务相同的名称时，构建的维护将更加容易，并且Gradle能够通过在顶级指定常用任务名称来执行每个项目中的相同任务。
+
+## 简介 ##
+
+基于groovy，其build.gradle脚本使用groovy dsl编写。
+
+#### Task 依赖 ####
+
+[http://www.blogjava.net/wldandan/archive/2012/07/05/382246.html](http://www.blogjava.net/wldandan/archive/2012/07/05/382246.html "gradle")
+
+当构建一个复杂的项目时，不同task之间存在依赖是必然的。比如说，如果想运行'部署'的task，必然要先运行 编译、打包、检测服务器等task，只有当这被些被依赖的task执行完成后，才会部署。对于这种行为之间的依赖，Ant、Maven都提供了声明式的定义，非常简单。同样，使用Gradle定义task之间的依赖也是件很容易的事

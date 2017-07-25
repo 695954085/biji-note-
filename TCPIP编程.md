@@ -250,3 +250,10 @@ SSLFilter一定要注入到过滤链的第一个位置。
 **握手**
 
 实际上，要实现握手，服务器必须等待一些握手消息的到达，例如客户端发送一个ClientHello消息。
+
+
+#### Process Thread 与 ExecutorFilter ####
+
+[http://blog.csdn.net/liuzhenwen/article/details/5894279](http://blog.csdn.net/liuzhenwen/article/details/5894279 "Process的Thread与ExecutorFilter的Thread")
+
+
