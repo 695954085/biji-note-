@@ -256,4 +256,110 @@ SSLFilter一定要注入到过滤链的第一个位置。
 
 [http://blog.csdn.net/liuzhenwen/article/details/5894279](http://blog.csdn.net/liuzhenwen/article/details/5894279 "Process的Thread与ExecutorFilter的Thread")
 
+![](https://github.com/695954085/biji-note-/blob/master/res/0_128487154722qH.gif?raw=true)
 
+
+关于MinaServerMQChannel的线程池用法介绍
+
+<pre>
+            int numCpu = Runtime.getRuntime().availableProcessors();
+            ThreadPoolExecutor acceptorThreadPool = new ThreadPoolExecutor(
+                    numCpu + 1, Integer.MAX_VALUE, 3600L, TimeUnit.SECONDS,
+                    new SynchronousQueue<Runnable>(), new ThreadFactory()
+                    {
+                        private AtomicInteger acceptorNumber = new AtomicInteger(
+                                0);
+
+                        private AtomicInteger processorNumber = new AtomicInteger(
+                                0);
+
+                        public Thread newThread(Runnable r)
+                        {
+                            String currentGroupName = Thread.currentThread()
+                                    .getThreadGroup().getName();
+                            if (currentGroupName.startsWith("Acceptor"))
+                            {
+                                String name = currentGroupName + ".Processor"
+                                        + processorNumber.getAndIncrement();
+                                ThreadGroup group = new ABThreadGroup(name);
+                                return new Thread(group, r, name, 0);
+                            } else
+                            {
+                                ThreadGroup group = new ThreadGroup("Acceptor"
+                                        + acceptorNumber.getAndIncrement());
+                                return new Thread(group, r, group.getName());
+                            }
+                        }
+                    });
+            acceptor = new SocketAcceptor(numCpu, acceptorThreadPool);
+===============================================================================
+            // 因为这个Executor不会并发添加任务，所以没有必要搞队列机制
+            cfg.getFilterChain().addLast("async executor",
+                    new ABExecutorFilter(new ABExecutorFilter.ExecutorFactory()
+                    {
+                        public Executor createExecutor()
+                        {
+                            final AtomicReference<Executor> executorRef = new AtomicReference<Executor>();
+                            ThreadPoolExecutor result = new ThreadPoolExecutor(
+                                    1, Integer.MAX_VALUE, 15L,
+                                    TimeUnit.SECONDS,
+                                    new SynchronousQueue<Runnable>(),
+                                    new ThreadFactory()
+                                    {
+                                        private AtomicInteger threadNumber = new AtomicInteger(
+                                                1);
+
+                                        public Thread newThread(final Runnable r)
+                                        {
+                                            String groupName = Thread
+                                                    .currentThread()
+                                                    .getThreadGroup().getName();
+                                            String name = groupName
+                                                    + ".Worker"
+                                                    + threadNumber
+                                                            .getAndIncrement();
+                                            return new Thread(new Runnable()
+                                            {
+                                                public void run()
+                                                {
+                                                    ABExecutorFilter.executors
+                                                            .set(executorRef
+                                                                    .get());
+                                                    r.run();
+                                                }
+                                            }, name);
+                                        }
+                                    });
+                            MonitorManager.getDefault().registerMonitorMBean(result,
+                                    "processor", Thread.currentThread()
+                                            .getName());
+                            executorRef.set(result);
+                            return result;
+                        }
+                    }));
+
+</pre>
+
+I/O processor Thread
+ 
+作为I/O真正处理的线程，存在于服务器端和客户端，用来处理I/O的读写操作，线程的数量是可以配置的，默认最大数量是CPU个数+1 
+
+服务器端：在创建SocketAcceptor的时候指定ProcessorCount
+ 
+`SocketAcceptor acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors() + 1, Executors.newCachedThreadPool());`
+ 
+客户端：在创建SocketConnector 的时候指定ProcessorCount 
+
+`SocketConnector connector = new SocketConnector(Runtime.getRuntime().availableProcessors() + 1, Executors.newCachedThreadPool());`
+ 
+I/O Processor Thread，是依附于IoService，类似上面的例子
+`SocketConnector connector = new SocketConnector(Runtime.getRuntime().availableProcessors() + 1, Executors.newCachedThreadPool());`
+
+是指SocketConnector这个线程允许CPU+1个I/O Processor Thread 
+NioProcessor虽然是多线程，但是对与一个连接的时候业务处理只会使用一个线程进行处理（Processor线程对于一个客户端连接只使用一个线程NioProcessor-n）如果handler的业务比较耗时，会导致NioProcessor线程堵塞 ，在2个客户端同时连接上来的时候会创建第2个（前提是第1个NioProcessor正在忙），创建的最大数量由Acceptor构造方法的时候指定。
+
+如果:一个客户端连接同服务器端有很多通信，并且i/o的开销不大，但是handler处理的业务时间比较长，那么需要采用独立的线程模式，在 filterchain的最后增加一个executorfitler 
+
+`acceptor.getFilterChain().addLast(&quot;threadPool&quot;, new ExecutorFilter(Executors.newCachedThreadPool()));`
+ 
+这样可以保证processor和handler的线程是分开的，否则：客户端发送3个消息，而服务器对于每个消息要处理10s左右，那么这3个消息是被串行处理，在处理第一个消息的时候，后面的消息将被堵塞，同样反过来客户端也有同样的问题。 
